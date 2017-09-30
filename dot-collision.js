@@ -1,9 +1,11 @@
   var dotCollisionCanvas = document.getElementById("dot-collision");
   var canvasContext = dotCollisionCanvas.getContext("2d");
+  canvasContext.globalAlpha = .5;
   var canvasWidth = dotCollisionCanvas.width;
   var canvasHeight = dotCollisionCanvas.height;
+  var isAnimationPaused = false;
   var radius = 5;
-  var nodeAmount = 40;
+  var nodeAmount = 30;
   var minSpeed = .2;
   var maxSpeed = .4;
   var nodes = [];
@@ -45,6 +47,8 @@
       glow.addColorStop(0, "white");
 
       canvasContext.fillStyle = glow;
+      canvasContext.shadowBlur = 20;
+      canvasContext.shadowColor = "#005580";
       canvasContext.fill();
   }
 
@@ -82,8 +86,19 @@
           connnectNodes(node.x, node.y);
       });
 
-      window.requestAnimationFrame(animateNodes);
+      if (!isAnimationPaused) {
+          window.requestAnimationFrame(animateNodes);
+      }
   }
+
+  dotCollisionCanvas.addEventListener('click', function(event) {
+      if (isAnimationPaused === true) {
+          isAnimationPaused = false;
+          window.requestAnimationFrame(animateNodes);
+      } else {
+          isAnimationPaused = true;
+      }
+  });
 
   init();
   window.requestAnimationFrame(animateNodes);
